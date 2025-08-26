@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>短網址SaaS服務 - 完整UI Flow</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .header {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+        
+        .flow-section {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .flow-section:hover {
+            transform: translateY(-5px);
+        }
+        
+        .section-title {
+            color: #4a5568;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+        
+        .flow-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .flow-card {
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 20px;
+            background: #f8fafc;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .flow-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+        }
+        
+        .flow-card:hover {
+            border-color: #667eea;
+            background: #f1f5f9;
+            transform: translateY(-2px);
+        }
+        
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 15px;
+        }
+        
+        .flow-steps {
+            list-style: none;
+        }
+        
+        .flow-steps li {
+            margin-bottom: 8px;
+            padding-left: 25px;
+            position: relative;
+            color: #4a5568;
+            line-height: 1.5;
+        }
+        
+        .flow-steps li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            color: #667eea;
+            font-weight: bold;
+        }
+        
+        .mockup-section {
+            background: #f7fafc;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .mockup-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+        }
+        
+        .mockup-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            border: 1px solid #e2e8f0;
+            text-align: center;
+        }
+        
+        .mockup-title {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+        
+        .mockup-desc {
+            font-size: 0.9rem;
+            color: #718096;
+        }
+        
+        .navigation-flow {
+            background: linear-gradient(135deg, #4299e1, #3182ce);
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .nav-title {
+            font-size: 1.3rem;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+        
+        .nav-items {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .nav-item {
+            background: rgba(255,255,255,0.2);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            backdrop-filter: blur(10px);
+        }
+        
+        .user-personas {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .persona-card {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .persona-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .persona-desc {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            
+            .flow-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .container {
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔗 短網址SaaS服務</h1>
+            <p>完整UI Flow架構設計</p>
+        </div>
+
+        <!-- 主要用戶流程 -->
+        <div class="flow-section">
+            <h2 class="section-title">🎯 主要用戶流程</h2>
+            
+            <div class="flow-grid">
+                <div class="flow-card">
+                    <h3 class="card-title">新用戶註冊流程</h3>
+                    <ul class="flow-steps">
+                        <li>訪問首頁</li>
+                        <li>點擊「開始使用」或「註冊」</li>
+                        <li>選擇註冊方式（Email/Google/GitHub）</li>
+                        <li>填寫基本資訊</li>
+                        <li>Email驗證</li>
+                        <li>選擇方案（免費/付費）</li>
+                        <li>進入Dashboard</li>
+                    </ul>
+                </div>
+
+                <div class="flow-card">
+                    <h3 class="card-title">用戶登入流程</h3>
+                    <ul class="flow-steps">
+                        <li>訪問登入頁面</li>
+                        <li>輸入帳號密碼或選擇第三方登入</li>
+                        <li>二步驟驗證（可選）</li>
+                        <li>進入Dashboard</li>
+                        <li>顯示歡迎訊息和使用統計</li>
+                    </ul>
+                </div>
+
+                <div class="flow-card">
+                    <h3 class="card-title">創建短網址流程</h3>
+                    <ul class="flow-steps">
+                        <li>在Dashboard點擊「新增連結」</li>
+                        <li>貼上原始網址</li>
+                        <li>設定短網址後綴（可選）</li>
+                        <li>添加標籤和描述</li>
+                        <li>設定進階選項（過期時間、密碼等）</li>
+                        <li>點擊「生成短網址」</li>
+                        <li>顯示成功頁面並提供分享選項</li>
+                    </ul>
+                </div>
+
+                <div class="flow-card">
+                    <h3 class="card-title">短網址管理流程</h3>
+                    <ul class="flow-steps">
+                        <li>進入「我的連結」頁面</li>
+                        <li>查看連結列表（表格/卡片檢視）</li>
+                        <li>使用搜尋和篩選功能</li>
+                        <li>編輯連結資訊</li>
+                        <li>查看詳細統計數據</li>
+                        <li>複製/分享/刪除操作</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 頁面架構 -->
+        <div class="flow-section">
+            <h2 class="section-title">📱 頁面架構與導航</h2>
+            
+            <div class="navigation-flow">
+                <div class="nav-title">主要導航結構</div>
+                <div class="nav-items">
+                    <div class="nav-item">Dashboard</div>
+                    <div class="nav-item">我的連結</div>
+                    <div class="nav-item">分析報告</div>
+                    <div class="nav-item">QR碼管理</div>
+                    <div class="nav-item">API文件</div>
+                    <div class="nav-item">帳戶設定</div>
+                    <div class="nav-item">支援中心</div>
+                </div>
+            </div>
+
+            <div class="mockup-section">
+                <h3 style="margin-bottom: 15px; color: #2d3748;">核心頁面結構</h3>
+                <div class="mockup-grid">
+                    <div class="mockup-card">
+                        <div class="mockup-title">🏠 首頁</div>
+                        <div class="mockup-desc">品牌介紹、功能展示、方案比較、用戶評價</div>
+                    </div>
+                    <div class="mockup-card">
+                        <div class="mockup-title">📊 Dashboard</div>
+                        <div class="mockup-desc">概覽統計、快速創建、最近活動、使用量圖表</div>
+                    </div>
+                    <div class="mockup-card">
+                        <div class="mockup-title">🔗 連結管理</div>
+                        <div class="mockup-desc">連結列表、搜尋篩選、批次操作、詳細編輯</div>
+                    </div>
+                    <div class="mockup-card">
+                        <div class="mockup-title">📈 分析報告</div>
+                        <div class="mockup-desc">點擊統計、地理分布、設備分析、時間趨勢</div>
+                    </div>
+                    <div class="mockup-card">
+                        <div class="mockup-title">📱 QR碼中心</div>
+                        <div class="mockup-desc">QR碼生成、樣式客製、批量下載、掃描統計</div>
+                    </div>
+                    <div class="mockup-card">
+                        <div class="mockup-title">⚙️ 設定頁面</div>
+                        <div class="mockup-desc">個人資料、安全設定、通知偏好、API金鑰</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 互動設計 -->
+        <div class="flow-section">
+            <h2 class="section-title">✨ 互動設計與微動畫</h2>
+            
+            <div class="flow-grid">
+                <div class="flow-card">
+                    <h3 class="card-title">按鈕互動</h3>
+                    <ul class="flow-steps">
+                        <li>Hover效果：顏色變化、陰影加深</li>
+                        <li>點擊反饋：縮放動畫</li>
+                        <li>載入狀態：旋轉指示器</li>
+                        <li>成功狀態：綠色勾選動畫</li>
+                    </ul>
+                </div>
+
+                <div class="flow-card">
+                    <h3 class="card-title">表單互動</h3>
+                    <ul class="flow-steps">
+                        <li>Focus狀態：邊框顏色變化</li>
+                        <li>即時驗證：錯誤提示動畫</li>
+                        <li>自動完成：下拉選單淡入</li>
+                        <li>成功提交：頁面轉場效果</li>
+                    </ul>
+                </div>
+
+                <div class="flow-card">
+                    <h3 class="card-title">資料載入</h3>
+                    <ul class="flow-steps">
+                        <li>骨架屏：載入佔位符</li>
+                        <li>進度指示：百分比顯示</li>
+                        <li>無限滾動：底部載入更多</li>
+                        <li>錯誤處理：友善錯誤頁面</li>
+                    </ul>
+                </div>
+
+                <div class="flow-card">
+                    <h3 class="card-title">通知系統</h3>
+                    <ul class="flow-steps">
+                        <li>Toast通知：右上角滑入</li>
+                        <li>Modal彈窗：背景模糊效果</li>
+                        <li>確認對話框：搖動警告動畫</li>
+                        <li>提示氣泡：Tooltip懸浮顯示</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 響應式設計 -->
+        <div class="flow-section">
+            <h2 class="section-title">📱 響應式設計流程</h2>
+            
+            <div class="flow-grid">
+                <div class="flow-card">
+                    <h3 class="card-title">桌面版 (1200px+)</h3>
+                    <ul class="flow-steps">
+                        <li>完整側邊欄導航</li>
+                        <li>多欄位資料表格</li>
+                        <li>豐富的圖表展示</li>
+                        <li>Hover互動效果</li>
+                        <li>快捷鍵支援</li>
+                    </ul>
+                </div>
+
+                <div class="flow-card">
+                    <h3 class="card-title">平板版 (768-1199px)</h3>
+                    <ul class="flow-steps">
+                        <li>摺疊式側邊欄</li>
+                        <li>響應式表格設計</li>
+                        <li>觸控優化按鈕</li>
+                        <li>簡化圖表展示</li>
+                    </ul>
+                </div>
+
+                <div class="flow-card">
+                    <h3 class="card-title">手機版 (320-767px)</h3>
+                    <ul class="flow-steps">
+                        <li>底部標籤導航</li>
+                        <li>卡片式布局</li>
+                        <li>滑動手勢操作</li>
+                        <li>大拇指友善設計</li>
+                        <li>一鍵複製功能</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 用戶角色設定 -->
+        <div class="flow-section">
+            <h2 class="section-title">👥 用戶角色與使用情境</h2>
+            
+            <div class="user-personas">
+                <div class="persona-card">
+                    <div class="persona-name">📝 內容創作者</div>
+                    <div class="persona-desc">需要追蹤連結效果，分析受眾行為，美化社群媒體貼文</div>
+                </div>
+                
+                <div class="persona-card">
+                    <div class="persona-name">🏢 中小企業</div>
+                    <div class="persona-desc">管理行銷活動連結，追蹤轉換率，提升品牌形象</div>
+                </div>
+                
+                <div class="persona-card">
+                    <div class="persona-name">👨‍💻 開發者</div>
+                    <div class="persona-desc">需要API整合，批量處理，自動化工作流程</div>
+                </div>
+                
+                <div class="persona-card">
+                    <div class="persona-name">📊 行銷人員</div>
+                    <div class="persona-desc">深度分析數據，A/B測試，多渠道追蹤</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 錯誤處理流程 -->
+        <div class="flow-section">
+            <h2 class="section-title">⚠️ 錯誤處理與邊界情況</h2>
+            
+            <div class="flow-grid">
+                <div class="flow-card">
+                    <h3 class="card-title">網路錯誤</h3>
+                    <ul class="flow-steps">
+                        <li>顯示離線提示</li>
+                        <li>提供重試按鈕</li>
+                        <li>本地快取數據</li>
+                        <li>網路恢復自動同步</li>
+                    </ul>
+                </div>
+
+                <div class="flow-card">
+                    <h3 class="card-title">輸入驗證</h3>
+                    <ul class="flow-steps">
+                        <li>即時格式檢查</li>
+                        <li>友善錯誤訊息</li>
+                        <li>建議修正方式</li>
+                        <li>防止重複提交</li>
+                    </ul>
+                </div>
+
+                <div class="flow-card">
+                    <h3 class="card-title">權限控制</h3>
+                    <ul class="flow-steps">
+                        <li>登入狀態檢查</li>
+                        <li>方案限制提醒</li>
+                        <li>升級引導流程</li>
+                        <li>訪問權限說明</li>
+                    </ul>
+                </div>
+
+                <div class="flow-card">
+                    <h3 class="card-title">404/500錯誤</h3>
+                    <ul class="flow-steps">
+                        <li>品牌化錯誤頁面</li>
+                        <li>提供回首頁連結</li>
+                        <li>搜尋功能建議</li>
+                        <li>客服聯繫方式</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- 付費升級流程 -->
+        <div class="flow-section">
+            <h2 class="section-title">💳 付費升級與計費流程</h2>
+            
+            <div class="flow-grid">
+                <div class="flow-card">
+                    <h3 class="card-title">方案比較</h3>
+                    <ul class="flow-steps">
+                        <li>清楚的功能對比表</li>
+                        <li>突出推薦方案</li>
+                        <li>年付折扣提示</li>
+                        <li>免費試用按鈕</li>
+                    </ul>
+                </div>
+
+                <div class="flow-card">
+                    <h3 class="card-title">結帳流程</h3>
+                    <ul class="flow-steps">
+                        <li>方案確認頁面</li>
+                        <li>付款方式選擇</li>
+                        <li>發票資訊填寫</li>
+                        <li>安全付款處理</li>
+                        <li>訂閱成功確認</li>
+                    </ul>
+                </div>
+
+                <div class="flow-card">
+                    <h3 class="card-title">使用量監控</h3>
+                    <ul class="flow-steps">
+                        <li>即時使用量顯示</li>
+                        <li>接近限制警告</li>
+                        <li>超量處理方案</li>
+                        <li>自動升級建議</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
